@@ -29,3 +29,15 @@ This utility helps reduce unnecessary Flow loops and assignments.
 - Extract a single record from a **Get Records** result in Flow
 - Simplify Flow logic where only the first record is required
 - Reusable utility across multiple Flows and objects
+
+---
+
+## Behavior Notes
+
+- The first record returned is based on the **existing order of the record collection**
+- No sorting or filtering is performed by the Apex action
+- If the input collection is **null or empty**, the returned record is `null`
+- The full **SObject is returned as-is**, including all queried fields
+- The action does **not modify** the input records in any way
+- Designed as a **utility helper** for Flow, not for bulk record processing
+
