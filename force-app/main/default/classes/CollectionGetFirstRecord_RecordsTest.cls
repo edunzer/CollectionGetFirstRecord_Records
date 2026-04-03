@@ -19,6 +19,7 @@ private class CollectionGetFirstRecord_RecordsTest {
 
         System.assertEquals(1, responses.size(), 'Should return one response per request');
         System.assertNotEquals(null, responses[0].record, 'Record should not be null');
+        System.assertEquals(null, responses[0].errorMessage, 'No error message should be set for a valid list');
 
         Account returned = (Account) responses[0].record;
         System.assertEquals(a1.Id, returned.Id, 'Should return the first account inserted');
@@ -43,6 +44,8 @@ private class CollectionGetFirstRecord_RecordsTest {
 
         System.assertEquals(2, responses.size(), 'Should return two responses');
         System.assertEquals(null, responses[0].record, 'Empty list should yield null record');
+        System.assertEquals('Input list was empty', responses[0].errorMessage, 'Empty list should set appropriate error message');
         System.assertEquals(null, responses[1].record, 'Null list should yield null record');
+        System.assertEquals('Input list was null', responses[1].errorMessage, 'Null list should set appropriate error message');
     }
 }

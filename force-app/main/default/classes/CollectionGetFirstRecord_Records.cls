@@ -6,8 +6,16 @@ public with sharing class CollectionGetFirstRecord_Records {
         for (Request req : requests) {
             Response resp = new Response();
 
-            if (req.records == null || req.records.isEmpty()) {
+            if (req.records == null) {
                 resp.record = null;
+                resp.errorMessage = 'Input list was null';
+                results.add(resp);
+                continue;
+            }
+
+            if (req.records.isEmpty()) {
+                resp.record = null;
+                resp.errorMessage = 'Input list was empty';
                 results.add(resp);
                 continue;
             }
@@ -27,5 +35,7 @@ public with sharing class CollectionGetFirstRecord_Records {
     public class Response {
         @InvocableVariable(label='Record' description='The first record from the provided collection')
         public SObject record;
+        @InvocableVariable(label='Error Message' description='Description of why no record was returned, when applicable')
+        public String errorMessage;
     }
 }
