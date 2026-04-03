@@ -12,6 +12,22 @@ public with sharing class CollectionGetFirstRecord_Records {
                 continue;
             }
 
+            Schema.SObjectType expectedType = req.records[0] != null ? req.records[0].getSObjectType() : null;
+            Boolean mixedTypes = false;
+            for (SObject record : req.records) {
+                if (record == null || record.getSObjectType() != expectedType) {
+                    mixedTypes = true;
+                    break;
+                }
+            }
+
+            if (mixedTypes) {
+                resp.record = null;
+                resp.errorMessage = 'Mixed SObject types detected in the input list. All records must be of the same SObject type.';
+                results.add(resp);
+                continue;
+            }
+
             resp.record = req.records[0];
             results.add(resp);
         }
@@ -27,5 +43,8 @@ public with sharing class CollectionGetFirstRecord_Records {
     public class Response {
         @InvocableVariable(label='Record' description='The first record from the provided collection')
         public SObject record;
+
+        @InvocableVariable(label='Error Message' description='Error message when records contain mixed SObject types')
+        public String errorMessage;
     }
 }

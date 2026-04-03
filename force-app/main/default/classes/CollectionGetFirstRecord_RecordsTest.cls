@@ -26,6 +26,28 @@ private class CollectionGetFirstRecord_RecordsTest {
     }
 
     @isTest
+    static void testGetFirstRecord_MixedSObjectTypesReturnsNullWithError() {
+        // Create test records of different SObject types
+        Account acc = new Account(Name='Test Account');
+        insert acc;
+        Contact con = new Contact(LastName='Test Contact', AccountId=acc.Id);
+        insert con;
+
+        CollectionGetFirstRecord_Records.Request req = new CollectionGetFirstRecord_Records.Request();
+        req.records = new List<SObject>{ acc, con };
+
+        List<CollectionGetFirstRecord_Records.Request> requests = new List<CollectionGetFirstRecord_Records.Request>{ req };
+
+        Test.startTest();
+        List<CollectionGetFirstRecord_Records.Response> responses = CollectionGetFirstRecord_Records.getFirstRecord(requests);
+        Test.stopTest();
+
+        System.assertEquals(1, responses.size(), 'Should return one response');
+        System.assertEquals(null, responses[0].record, 'Mixed types should yield null record');
+        System.assertNotEquals(null, responses[0].errorMessage, 'Mixed types should set an error message');
+    }
+
+    @isTest
     static void testGetFirstRecord_EmptyAndNullListsReturnNull() {
         // Empty list
         CollectionGetFirstRecord_Records.Request emptyReq = new CollectionGetFirstRecord_Records.Request();
